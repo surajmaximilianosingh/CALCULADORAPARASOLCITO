@@ -695,6 +695,184 @@ header::before {
 .print-footer { display: none; }
 
 /* ══════════════════════════════════════
+   MENSAJE MOTIVACIONAL
+══════════════════════════════════════ */
+.love-section {
+  margin-top: 24px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff4d8d 40%, #c44569 100%);
+  padding: 26px 20px 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(196,69,105,0.30);
+}
+
+.love-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ctext x='10' y='28' font-size='18' opacity='0.08'%3E❤%3C/text%3E%3C/svg%3E");
+  background-size: 40px 40px;
+}
+
+.love-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.love-header-hearts {
+  font-size: 22px;
+  animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+
+.love-header-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.70);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.love-quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
+}
+
+.love-quote {
+  background: rgba(255,255,255,0.14);
+  border-left: 3px solid rgba(255,255,255,0.55);
+  border-radius: 0 10px 10px 0;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.45;
+  backdrop-filter: blur(4px);
+}
+
+.love-signature {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.love-signature-text {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.3px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.love-signature-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.love-hearts-row {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 20px;
+  letter-spacing: 4px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@media print {
+  .love-section { display: none !important; }
+}
+
+/* ══════════════════════════════════════
+   SPLASH SCREEN
+══════════════════════════════════════ */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #2d1b35 0%, #1a0d22 50%, #0d1a14 100%);
+  overflow: hidden;
+  transition: opacity 0.7s ease;
+}
+#splash.hiding { opacity: 0; pointer-events: none; }
+.splash-stars { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.star {
+  position: absolute; width: 2px; height: 2px;
+  background: rgba(255,255,255,0.6); border-radius: 50%;
+  animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0.2; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.5); }
+}
+.splash-inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  width: min(90vw, 380px); text-align: center;
+}
+.splash-top-hearts {
+  font-size: 26px; letter-spacing: 5px; margin-bottom: 16px;
+  animation: float-h 2.5s ease-in-out infinite;
+}
+@keyframes float-h { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.splash-greeting {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(255,255,255,0.30); margin-bottom: 6px;
+}
+.splash-name {
+  font-size: clamp(30px, 10vw, 44px); font-weight: 900; letter-spacing: -1px;
+  line-height: 1; margin-bottom: 26px;
+  background: linear-gradient(135deg, #f9a8d4 0%, #ffffff 50%, #a7f3d0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.splash-cards { display: flex; flex-direction: column; gap: 9px; width: 100%; margin-bottom: 24px; }
+.splash-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px; padding: 13px 16px; text-align: left;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.splash-card.visible { opacity: 1; transform: translateY(0); }
+.splash-card-trigger {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: rgba(249,168,212,0.70); margin-bottom: 4px;
+}
+.splash-card-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.92); line-height: 1.4; }
+.splash-firma { font-size: 12px; color: rgba(255,255,255,0.30); margin-bottom: 20px; }
+.splash-firma span { color: rgba(249,168,212,0.80); font-weight: 600; }
+.splash-btn {
+  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 50px; color: rgba(255,255,255,0.75); font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 600; padding: 12px 32px; cursor: pointer;
+  transition: background 0.2s, color 0.2s; -webkit-tap-highlight-color: transparent;
+}
+.splash-btn:hover, .splash-btn:active {
+  background: rgba(255,255,255,0.18); color: #fff;
+}
+@media print { #splash { display: none !important; } }
+
+/* ══════════════════════════════════════
    TOAST
 ══════════════════════════════════════ */
 .toast {
@@ -719,6 +897,40 @@ header::before {
 </style>
 </head>
 <body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-stars" id="splashStars"></div>
+  <div class="splash-inner">
+    <div class="splash-top-hearts">💗 💗 💗</div>
+    <div class="splash-greeting">para vos,</div>
+    <div class="splash-name">Sol ☀️</div>
+    <div class="splash-cards" id="splashCards">
+      <div class="splash-card">
+        <div class="splash-card-trigger">Para cuando tengas miedo</div>
+        <div class="splash-card-text">Confío en vos.</div>
+      </div>
+      <div class="splash-card">
+        <div class="splash-card-trigger">Para cuando estés cansada</div>
+        <div class="splash-card-text">Descansá, no te rindas.</div>
+      </div>
+      <div class="splash-card">
+        <div class="splash-card-trigger">Para cuando dudes</div>
+        <div class="splash-card-text">Sos capaz.</div>
+      </div>
+      <div class="splash-card">
+        <div class="splash-card-trigger">Para cuando sonrías</div>
+        <div class="splash-card-text">Espero haber sido parte del motivo.</div>
+      </div>
+      <div class="splash-card">
+        <div class="splash-card-trigger">Para cuando me extrañes</div>
+        <div class="splash-card-text">Yo también te estoy extrañando.</div>
+      </div>
+    </div>
+    <div class="splash-firma">con todo el amor, <span>tu BE</span> ❤️</div>
+    <button class="splash-btn" onclick="closeSplash()">Entrar ✨</button>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header>
@@ -850,6 +1062,30 @@ header::before {
       <button class="btn btn-primary"   onclick="copiarResumen()">📋 Copiar</button>
       <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn btn-danger"    onclick="limpiarMes()">🗑 Limpiar</button>
+    </div>
+  </div>
+
+  <!-- MENSAJE MOTIVACIONAL -->
+  <div class="love-section">
+    <div class="love-header">
+      <span class="love-header-hearts">💖</span>
+      <span class="love-header-title">Para vos, mi Sol 🌻</span>
+    </div>
+
+    <div class="love-quotes">
+      <div class="love-quote">✨ Confío en vos incluso cuando vos dudás de vos misma.</div>
+      <div class="love-quote">🌱 Todo el esfuerzo que estás haciendo va a dar resultados, seguí así.</div>
+      <div class="love-quote">💫 Cada día te admiro más por la persona que sos.</div>
+      <div class="love-quote">🏆 Tu éxito también me hace feliz.</div>
+    </div>
+
+    <div class="love-signature">
+      <div class="love-signature-text">por tu "BE" 💘</div>
+      <div class="love-signature-sub">te amo x siempre, mi solcipanto</div>
+    </div>
+
+    <div class="love-hearts-row">
+      ❤️ 🧡 💛 💚 💙 💜 🩷 ❤️ 🧡 💛 💚 💙 💜
     </div>
   </div>
 
@@ -1039,6 +1275,39 @@ TOTAL A FACTURAR: ${fmtPesos(total * tarifa)}`;
   document.getElementById('inputCliente').addEventListener('input', actualizarResumen);
 
   renderCalendar();
+
+  // SPLASH
+  (function() {
+    const todayKey = 'sol_splash_' + new Date().toISOString().slice(0,10);
+    const seen = localStorage.getItem(todayKey);
+
+    const splash = document.getElementById('splash');
+    const stars  = document.getElementById('splashStars');
+
+    // Generar estrellas
+    for (let i = 0; i < 60; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*3}s;--delay:${Math.random()*3}s;opacity:${0.2+Math.random()*0.8};width:${1+Math.random()*2.5}px;height:${1+Math.random()*2.5}px`;
+      stars.appendChild(s);
+    }
+
+    if (seen) {
+      splash.style.display = 'none';
+    } else {
+      // Animar tarjetas una por una
+      const cards = document.querySelectorAll('.splash-card');
+      cards.forEach((c, i) => {
+        setTimeout(() => c.classList.add('visible'), 300 + i * 200);
+      });
+    }
+
+    window.closeSplash = function() {
+      localStorage.setItem(todayKey, '1');
+      splash.classList.add('hiding');
+      setTimeout(() => { splash.style.display = 'none'; }, 750);
+    };
+  })();
 </script>
 </body>
 </html>
