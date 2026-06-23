@@ -873,6 +873,107 @@ header::before {
 @media print { #splash { display: none !important; } }
 
 /* ══════════════════════════════════════
+   SECCION MOTIVACIONAL
+══════════════════════════════════════ */
+.motiv-section {
+  margin-top: 20px;
+  background: var(--panel-bg);
+  border: 1px solid var(--gris-borde);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  box-shadow: 0 2px 10px var(--shadow-color);
+  text-align: center;
+}
+
+.motiv-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gris-texto);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.motiv-btn {
+  background: linear-gradient(135deg, #c44569 0%, #d4537e 100%);
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 36px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  transition: opacity 0.18s, transform 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow: 0 4px 18px rgba(196,69,105,0.30);
+}
+.motiv-btn:hover  { opacity: 0.88; }
+.motiv-btn:active { transform: scale(0.96); }
+
+.motiv-frase-wrap {
+  margin-top: 18px;
+  min-height: 0;
+  overflow: hidden;
+  transition: min-height 0.4s ease;
+}
+
+.motiv-frase {
+  background: linear-gradient(135deg, #fbeaf0 0%, #fff0f5 100%);
+  border: 1px solid #f4c0d1;
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.motiv-frase.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.motiv-frase-cuando {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #c44569;
+  margin-bottom: 6px;
+}
+
+.motiv-frase-texto {
+  font-size: 17px;
+  font-weight: 700;
+  color: #4B1528;
+  line-height: 1.4;
+}
+
+.motiv-frase-firma {
+  font-size: 11px;
+  color: #993556;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  .motiv-frase {
+    background: rgba(196,69,105,0.10);
+    border-color: rgba(196,69,105,0.25);
+  }
+  .motiv-frase-texto { color: #f9a8d4; }
+  .motiv-frase-firma { color: #ed93b1; }
+}
+
+@media print { .motiv-section { display: none !important; } }
+
+/* ══════════════════════════════════════
    TOAST
 ══════════════════════════════════════ */
 .toast {
@@ -1065,6 +1166,19 @@ header::before {
     </div>
   </div>
 
+  <!-- BOTON MOTIVACIONAL -->
+  <div class="motiv-section">
+    <div class="motiv-title">✨ Para cuando lo necesites</div>
+    <button class="motiv-btn" onclick="mostrarFrase()">💗 Necesito un empujoncito</button>
+    <div class="motiv-frase-wrap">
+      <div class="motiv-frase" id="motivFrase">
+        <div class="motiv-frase-cuando" id="motivCuando"></div>
+        <div class="motiv-frase-texto"  id="motivTexto"></div>
+        <div class="motiv-frase-firma">— tu BE ❤️</div>
+      </div>
+    </div>
+  </div>
+
   <!-- MENSAJE MOTIVACIONAL -->
   <div class="love-section">
     <div class="love-header">
@@ -1120,10 +1234,13 @@ header::before {
   document.getElementById('printDate').textContent =
     now.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
 
-  // Storage
-  const key = (a,m) => `sol_${a}_${m}`;
-  const load = (a,m) => { try { return JSON.parse(localStorage.getItem(key(a,m))) || {}; } catch { return {}; } };
-  const save = (a,m,d) => { try { localStorage.setItem(key(a,m), JSON.stringify(d)); } catch {} };
+  // Storage — guarda horas + tarifa + cliente por mes
+  const key     = (a,m) => `sol_${a}_${m}`;
+  const keyMeta = (a,m) => `sol_meta_${a}_${m}`;
+  const load     = (a,m) => { try { return JSON.parse(localStorage.getItem(key(a,m))) || {}; } catch { return {}; } };
+  const save     = (a,m,d) => { try { localStorage.setItem(key(a,m), JSON.stringify(d)); } catch {} };
+  const loadMeta = (a,m) => { try { return JSON.parse(localStorage.getItem(keyMeta(a,m))) || {}; } catch { return {}; } };
+  const saveMeta = (a,m,d) => { try { localStorage.setItem(keyMeta(a,m), JSON.stringify(d)); } catch {} };
 
   function fmtHoras(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
   function fmtPesos(n) {
@@ -1143,6 +1260,13 @@ header::before {
     const mes  = parseInt(selectMes.value);
     const anio = parseInt(document.getElementById('inputAnio').value);
     horasData  = load(anio, mes);
+
+    // Restaurar tarifa y cliente guardados para este mes
+    const meta = loadMeta(anio, mes);
+    if (meta.tarifa  !== undefined) document.getElementById('inputTarifa').value  = meta.tarifa;
+    else                            document.getElementById('inputTarifa').value  = '';
+    if (meta.cliente !== undefined) document.getElementById('inputCliente').value = meta.cliente;
+    else                            document.getElementById('inputCliente').value = '';
 
     const grid = document.getElementById('calendarGrid');
     grid.innerHTML = '';
@@ -1216,6 +1340,12 @@ header::before {
     const tarifa = parseFloat(document.getElementById('inputTarifa').value) || 0;
     const cliente = document.getElementById('inputCliente').value.trim() || '—';
 
+    // Persistir tarifa y cliente para este mes
+    saveMeta(anio, mes, {
+      tarifa:  document.getElementById('inputTarifa').value,
+      cliente: document.getElementById('inputCliente').value.trim()
+    });
+
     const vals   = Object.values(horasData).map(Number).filter(v => v > 0);
     const total  = vals.reduce((a,b) => a+b, 0);
     const dias   = vals.length;
@@ -1240,6 +1370,7 @@ header::before {
     if (!confirm(`¿Borrar todas las horas de ${MESES[mes]} ${anio}?`)) return;
     horasData = {};
     save(anio, mes, horasData);
+    saveMeta(anio, mes, {});
     renderCalendar();
     showToast('🗑 Mes limpiado');
   }
@@ -1266,6 +1397,44 @@ TOTAL A FACTURAR: ${fmtPesos(total * tarifa)}`;
     navigator.clipboard.writeText(txt)
       .then(()  => showToast('✅ Resumen copiado'))
       .catch(()  => { prompt('Copiá este texto:', txt); });
+  }
+
+  // Botón motivacional
+  const FRASES = [
+    'Hoy acordate de algo: sos más fuerte de lo que pensás.',
+    'No necesitás hacerlo perfecto, solo seguir avanzando.',
+    'Que nadie te haga dudar del valor que tenés.',
+    'Si hoy se pone difícil, hacé una pausa, pero no abandones.',
+    'Confío en vos incluso en los días en que vos no lo hacés.',
+    'Merecés todo lo bueno que estás construyendo.',
+    'Ojalá te veas con los mismos ojos con los que yo te veo.',
+    'Respirá profundo, un paso a la vez y vas a llegar.',
+    'No te exijas más de lo necesario, ya estás dando mucho.',
+    'Tu esfuerzo de hoy es el éxito de mañana.',
+    'Que tu sonrisa sea más fuerte que cualquier problema.',
+    'No te olvides de lo increíble que sos.',
+    'Todo pasa, incluso los días difíciles.',
+    'Vos podés con esto y con mucho más.',
+    'Nunca dejes que un mal momento te haga olvidar quién sos.',
+    'Andá tranquila, el mundo no se termina hoy.',
+    'La persona que querés ser se construye con los pequeños esfuerzos de cada día.',
+    'Siempre voy a estar orgulloso de vos, incluso cuando las cosas no salgan como esperabas.',
+    'Acordate de comer, descansar y cuidarte. También es parte del progreso.',
+    'No hace falta que cargues sola con todo.',
+  ];
+
+  let ultimaFrase = -1;
+  function mostrarFrase() {
+    let idx;
+    do { idx = Math.floor(Math.random() * FRASES.length); } while (idx === ultimaFrase);
+    ultimaFrase = idx;
+    const el = document.getElementById('motivFrase');
+    el.classList.remove('visible');
+    setTimeout(() => {
+      document.getElementById('motivCuando').textContent = '🌷';
+      document.getElementById('motivTexto').textContent  = FRASES[idx];
+      el.classList.add('visible');
+    }, 180);
   }
 
   // Eventos
