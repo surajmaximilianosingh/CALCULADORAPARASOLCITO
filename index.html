@@ -1278,9 +1278,6 @@ TOTAL A FACTURAR: ${fmtPesos(total * tarifa)}`;
 
   // SPLASH
   (function() {
-    const todayKey = 'sol_splash_' + new Date().toISOString().slice(0,10);
-    const seen = localStorage.getItem(todayKey);
-
     const splash = document.getElementById('splash');
     const stars  = document.getElementById('splashStars');
 
@@ -1292,18 +1289,13 @@ TOTAL A FACTURAR: ${fmtPesos(total * tarifa)}`;
       stars.appendChild(s);
     }
 
-    if (seen) {
-      splash.style.display = 'none';
-    } else {
-      // Animar tarjetas una por una
-      const cards = document.querySelectorAll('.splash-card');
-      cards.forEach((c, i) => {
-        setTimeout(() => c.classList.add('visible'), 300 + i * 200);
-      });
-    }
+    // Animar tarjetas una por una
+    const cards = document.querySelectorAll('.splash-card');
+    cards.forEach((c, i) => {
+      setTimeout(() => c.classList.add('visible'), 300 + i * 200);
+    });
 
     window.closeSplash = function() {
-      localStorage.setItem(todayKey, '1');
       splash.classList.add('hiding');
       setTimeout(() => { splash.style.display = 'none'; }, 750);
     };
